@@ -11,7 +11,18 @@ Local Windows R 4.4.0, mseapca 2.2.1 / loadings 0.6.1 / ellmer 0.5.0 / pinned mc
 - PASS: local Edge browser, desktop 1440x1000 and mobile 390x844; image loading, internal anchors, pending endpoint text and no horizontal overflow. Static link/asset and actual example JSON checks passed.
 - PASS: Linux R 4.5.2 and Docker CI on implementation commit 8b029de: https://github.com/hiroyukiyamamoto/mseapca-mcp/actions/runs/38930283826 . Docker built successfully, started on PORT=8081, passed official MCP client tests for all tools/analysis families, rejected oversized bodies (413), throttled bursts (429), and recovered.
 
-Not verified: Cloud Run deployment, cloud cost/memory profiling, actual ChatGPT or Claude sessions, public remote endpoint. No deployment, billing, API enablement or public IAM changes have been performed for this new service. Planned site URL is not proof of publication.
+At initial implementation, cloud deployment and public Pages were unverified. The authorized deployment results below supersede that initial state; public MCP IAM remains unchanged.
 
 Scientific scope: exact namespace matching only; no species conversion or classifier validation. The real-data ORA demo applies human snapshot sets to mouse metabolites for software illustration, not validated cross-species inference. Pathway licenses are separate; commercial clearance is unresolved for some sources. See DATA_SOURCES.md.
-- PASS: read-only Google Cloud preflight: current project identified, no same-name service, existing shared JPY400 Cloud Run spend cap verified as configured. No new deployment or billing mutation.
+- PASS: read-only Google Cloud preflight: current project identified, no same-name service, existing shared JPY400 Cloud Run spend cap verified before the later authorized update recorded below.
+
+## Cloud validation after authorized private deployment
+
+- PASS: Pages publication through GitHub Actions; actual public site checked in Edge at desktop1440x1000 and mobile390x844, including image loading, internal anchors and horizontal layout.
+- PASS: Cloud Build 6ec46089-cc0f-4882-840c-cc939d7a233a; immutable image deployed to private Cloud Run revision mseapca-mcp-00001-td9.
+- PASS: authenticated official R MCP client on the actual Cloud Run endpoint: initialize, nine tools, all tool calls, ORA/range/MSEA/SSEA, exact JSON precision and invalid/excluded identifiers.
+- PASS: real endpoint anonymous403, malformed JSON400, unknown method -32601, recovery initialize; body413, rate429 and cooldown recovery.
+- PASS: existing shared Cloud Run spend cap increased to JPY1,000 with approval and verified CONFIGURED; scope unchanged. Amount is not a total invoice guarantee.
+- OBSERVED: built-in memory distribution sample means up to 56.91% (~291.4MiB), two points during demo tests. Not peak/worst-case capacity. No new monitoring service was configured.
+
+Remaining unverified: anonymous public MCP service (not authorized/published), actual ChatGPT/Claude sessions, worst-case capacity, actual invoice totals and spend-cap enforcement under exhaustion. See DEPLOYMENT.md for exact state, costs and emergency stop.

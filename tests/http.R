@@ -17,7 +17,9 @@ run_http_test <- function() {
   }
   config <- tempfile(fileext = ".json")
   on.exit(unlink(config), add = TRUE)
-  jsonlite::write_json(list(mcpServers = list(loadings = list(url = url))), config, auto_unbox = TRUE)
+  entry<-list(url=url,timeout=120)
+  if(nzchar(Sys.getenv("CLOUD_RUN_ID_TOKEN")))entry$headers<-list(Authorization="Bearer ${CLOUD_RUN_ID_TOKEN}")
+  jsonlite::write_json(list(mcpServers=list(mseapca=entry)),config,auto_unbox=TRUE)
   # Official MCP client performs initialization, tools/list and tools/call.
   tools <- mcptools::mcp_tools(config)
   names(tools) <- vapply(tools, function(t) t@name, character(1))

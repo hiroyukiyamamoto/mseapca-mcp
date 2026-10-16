@@ -1,41 +1,77 @@
-# Deployment (not yet executed)
+﻿# Deployment and operations
 
-## GitHub Pages
+## Current status
 
-The workflow `.github/workflows/pages.yml` publishes the existing `docs/` directory on manual dispatch. After approval, set repository Settings > Pages > Build and deployment > Source to **GitHub Actions**, then Actions > Publish GitHub Pages > Run workflow. Expected URL: https://hiroyukiyamamoto.github.io/mseapca-mcp/ . No domain change is needed. Endpoint is null until a verified hosted service exists.
+- Site: https://hiroyukiyamamoto.github.io/mseapca-mcp/ — published through GitHub Actions.
+- Project / region: `stable-century-479407-m7` / `asia-northeast1`.
+- Service / revision: `mseapca-mcp` / `mseapca-mcp-00001-td9`, ready, 100% traffic.
+- Endpoint: https://mseapca-mcp-121643671058.asia-northeast1.run.app/mcp .
+- Access: **private, Google Cloud IAM required**. No allUsers/allAuthenticatedUsers bindings; anonymous initialize returns 403. Public access awaits separate approval.
+- Runtime: existing role-free `loadings-mcp-runtime@stable-century-479407-m7.iam.gserviceaccount.com`; permissions were not changed.
+- Resources: 1 CPU, 512 MiB, request CPU billing, startup CPU boost; min0/max1 at service/revision levels, concurrency1, timeout30s.
 
-## Cloud Run
+The user approved Pages publication, private image build/deployment and increasing the existing shared Cloud Run spend cap to **JPY1,000/month**. No other service or service IAM was changed. No APIs or additional paid monitoring services were enabled.
 
-Do not modify loadings-mcp or any existing service. The deployment script names only **mseapca-mcp**, region asia-northeast1. A new deployment incurs build/image storage charges and requires approval. The current project's previously configured spend cap must be reverified, not assumed to guarantee JPY500 total expenditure. It covers shared Cloud Run usage, not builds, registry storage or all bill items, and enforcement may lag.
+## Cost protection
 
-1. Review current account/project, billing cap, service-name collision, least-privilege runtime identity and APIs. Do not enable APIs or change IAM/billing without approval.
-2. Build/push an immutable image only after cost approval. Local: `docker build -t mseapca-mcp .`.
-3. Set GOOGLE_CLOUD_PROJECT, IMAGE (prefer digest), RUNTIME_SERVICE_ACCOUNT, BILLING_ACCOUNT_ID and, for the current shared project, APPROVE_SHARED_PROJECT. Run `bash scripts/deploy.sh`. It checks the cap and asks before a **private** deployment.
-4. Settings: 1 CPU/512 MiB initially (not measured yet), min0/max1, concurrency1, request billing, timeout30. Measure cold start, memory, execution time and HTTP tests before selecting final resources.
-5. Run the official MCP client against the actual /mcp endpoint with authorized private access. Verify all nine tools, invalid inputs and limits.
-6. Anonymous public IAM access needs separate final approval after costs and security protections are checked. No public authorization has been changed by this implementation.
-7. Set docs/config.json endpoint and authentication only after verified deployment, update setup text and VALIDATION.md, then publish Pages.
+The existing spend-cap budget `fe0177db-e81e-494f-a512-4b1e7343ec0f` under billing account `01CD48-09CB81-E1885D` was increased from JPY400 to JPY1,000, retaining project `121643671058`, Cloud Run service `152E-C115-5142`, monthly period and EXCLUDE_ALL_CREDITS. Output state was re-read as CONFIGURED. The update asserted the prior state was CONFIGURED/not reconciling and used etag to prevent a concurrent state change; no enforced cap was lifted. The separate JPY500 project alert remains unchanged as an early warning; account-wide alerts were untouched.
 
-The gateway is a lightweight shared rate limit, not comprehensive distributed DoS protection. Per-instance throttling and max1 are not monetary caps. Billing controls may affect every service sharing the cap. This script does not create or modify budgets.
+**JPY1,000 is a shared Cloud Run stop threshold, not a guaranteed total invoice ceiling.** It is not an additional allowance for each MCP. Reporting/enforcement can lag and in-flight work can finish. Cloud Build, Artifact Registry, retained source objects, network/taxes or other bill items are not guaranteed covered. Other services sharing the cap can be paused when it is reached. Do not automatically lift an enforced cap.
 
-Emergency stop for this service only: remove anonymous access if present and disable its public invoker setting as applicable, or delete **only** the mseapca-mcp service after approval: `gcloud run services delete mseapca-mcp --project PROJECT --region asia-northeast1`. Removing allUsers alone is insufficient if invoker IAM checking was disabled. Deletion does not remove retained images or already incurred charges. Never disable shared project billing to stop this one service.
-
-## Environment preflight
-
-Read-only checks during implementation confirmed project `stable-century-479407-m7`, no existing `mseapca-mcp` service, an existing Docker repository `asia-northeast1-docker.pkg.dev/stable-century-479407-m7/cloud-run-source-deploy`, and the existing least-privilege identity `loadings-mcp-runtime@stable-century-479407-m7.iam.gserviceaccount.com`. Reusing that identity without changing its permissions requires deployment review; a separate identity would need explicit IAM approval.
-
-`scripts/spend-cap.R verify` successfully found the settled shared **JPY400/month Cloud Run spend cap**. This was a read-only check; no enforcement event was triggered. Other services share the same cap and may be paused when it is reached. No additional JPY500 allowance is created for this MCP.
-
-The proposed new image path is `asia-northeast1-docker.pkg.dev/stable-century-479407-m7/cloud-run-source-deploy/mseapca-mcp:COMMIT`. Cloud Build/push operations have not been run. The private deployment command, once image creation is approved, is equivalent to:
+Reverify before any deployment:
 
 ```sh
-gcloud run deploy mseapca-mcp \
-  --project stable-century-479407-m7 --region asia-northeast1 \
-  --image APPROVED_IMAGE_DIGEST \
-  --service-account loadings-mcp-runtime@stable-century-479407-m7.iam.gserviceaccount.com \
-  --no-allow-unauthenticated --port 8080 --cpu 1 --memory 512Mi \
-  --cpu-throttling --concurrency 1 --timeout 30 \
-  --min 0 --max 1 --min-instances 0 --max-instances 1
+GOOGLE_CLOUD_PROJECT=stable-century-479407-m7 \
+APPROVE_SHARED_PROJECT=stable-century-479407-m7 \
+BILLING_ACCOUNT_ID=01CD48-09CB81-E1885D \
+Rscript --vanilla scripts/spend-cap.R verify
 ```
 
-Anonymous access is a later separate approval step, after private service tests and memory/cost assessment. No existing Cloud Run service will be updated.
+## Build and deployment
+
+Standalone build: `docker build -t mseapca-mcp .`.
+The optional `Dockerfile.cached` reuses a previously verified immutable R dependency image, installs mseapca 2.2.1, checks package versions, and copies this project's R/data/gateway. It does not call or modify the loadings-mcp service. Both paths use the same pinned analysis packages.
+
+Cloud Build `6ec46089-cc0f-4882-840c-cc939d7a233a` succeeded with a 300-second deadline and no API/IAM changes. Deployed image:
+
+```text
+asia-northeast1-docker.pkg.dev/stable-century-479407-m7/cloud-run-source-deploy/mseapca-mcp@sha256:781fa6a6e2ad0a3a81285c2b5ffa228f1000f4a21add71e5d0b3800c02332ec6
+```
+
+`scripts/deploy.sh` remains private by default, verifies the configured <=JPY1,000 cap and asks before deployment. Specify GOOGLE_CLOUD_PROJECT, IMAGE, RUNTIME_SERVICE_ACCOUNT, BILLING_ACCOUNT_ID and APPROVE_SHARED_PROJECT. It targets only mseapca-mcp in asia-northeast1. New builds or deployments need authorization; unrelated services must not be changed.
+
+## Private endpoint tests
+
+For an authorized Google Cloud user, PowerShell:
+
+```powershell
+$env:MCP_ENDPOINT='https://mseapca-mcp-121643671058.asia-northeast1.run.app/mcp'
+$env:CLOUD_RUN_ID_TOKEN=(gcloud auth print-identity-token --quiet)
+try {
+  Rscript --vanilla tests/http.R
+  Rscript --vanilla scripts/check-remote-http.R
+  Rscript --vanilla scripts/check-limits.R
+} finally { Remove-Item Env:CLOUD_RUN_ID_TOKEN }
+```
+
+The token stays in process environment and is never printed, committed or written into MCP config files. IAM identity tokens are not an OAuth service for end-user MCP clients. Manual ChatGPT/Claude connections remain unverified.
+
+Authenticated official R MCP tests passed for initialization, nine-tool listing, every tool, all four analysis families, precision and invalid inputs. Actual endpoint checks passed: anonymous403, malformed JSON400, unknown method -32601, initialize recovery, body413, rate429 and recovery. Gateway limits: 2MiB, shared60/minute with burst10, worker20s, proxy25s. Per-instance throttling is not comprehensive distributed DoS protection.
+
+Built-in Cloud Run memory distributions during the demo tests had two points, with maximum sample mean 56.91% (~291.4 MiB of 512MiB). These are sample means, not instantaneous peaks or worst-case capacity guarantees. No out-of-memory failure occurred in the demo suite; upper-bound workloads and actual invoice totals remain unverified. Keep 512MiB until broader measurements justify a change.
+
+## Monitoring and emergency stop
+
+Use existing Cloud Run metrics for this service's requests, response classes, latency and memory, plus Billing reports filtered by project/service. No custom paid monitoring was added. Cap notifications occur at 50%, 80%, 100%; the early project alert is separate. Avoid repeated automated health checks that prevent scaling to zero.
+
+The service is currently private. If anonymous access is approved later, stop it by removing only its allUsers invoker binding and verifying anonymous403. If invoker IAM checking was disabled, re-enable it as well. For an emergency full stop, delete only this service after approval:
+
+```sh
+gcloud run services delete mseapca-mcp --project stable-century-479407-m7 --region asia-northeast1
+```
+
+Deletion does not remove retained images/source archives or already incurred charges. Never disable shared project billing to stop one service.
+
+## Pages
+
+`.github/workflows/pages.yml` publishes docs by manual dispatch. Pages source is GitHub Actions (workflow). After approved site changes, push and run `gh workflow run pages.yml --repo hiroyukiyamamoto/mseapca-mcp`. Keep endpoint/access/authentication in docs/config.json consistent with actual IAM, and update setup text. The private URL must never be advertised as anonymously accessible.

@@ -1,0 +1,12 @@
+# Optional accelerated Cloud Build: immutable, previously validated R dependencies.
+FROM asia-northeast1-docker.pkg.dev/stable-century-479407-m7/cloud-run-source-deploy/loadings-mcp@sha256:e5459735ca1517992fab4e3af031027187cbb7d7bf73e75811f96d5d23c65525
+USER root
+RUN Rscript --vanilla -e '.libPaths(c("/app/.library", .libPaths())); options(repos=c(CRAN="https://cloud.r-project.org")); remotes::install_version("mseapca", version="2.2.1", upgrade="never"); stopifnot(as.character(packageVersion("mseapca"))=="2.2.1", as.character(packageVersion("loadings"))=="0.6.1", as.character(packageVersion("ellmer"))=="0.5.0", as.character(packageVersion("mcptools"))=="1.0.3.9000")'
+COPY --chown=mcp:mcp R R
+COPY --chown=mcp:mcp data data
+COPY --chown=mcp:mcp scripts/start.sh scripts/start.sh
+RUN sed -i 's/\r$//' scripts/start.sh
+USER mcp
+ENV PORT=8080
+EXPOSE 8080
+CMD ["bash", "scripts/start.sh"]

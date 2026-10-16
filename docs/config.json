@@ -1,1 +1,1 @@
-{"endpoint":null,"status":"Not deployed yet","authentication":"Unconfigured"}
+{"endpoint":"https://mseapca-mcp-121643671058.asia-northeast1.run.app/mcp","access":"private","authentication":"Google Cloud IAM","status":"Authenticated MCP tests passed; public access pending approval"}

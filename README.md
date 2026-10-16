@@ -4,8 +4,8 @@ Metabolite set enrichment for AI agents, using R, **mseapca 2.2.1** and the offi
 
 Repository: https://github.com/hiroyukiyamamoto/mseapca-mcp
 
-Planned site: https://hiroyukiyamamoto.github.io/mseapca-mcp/ (publication pending).
-Hosted MCP: **not deployed**. `docs/config.json` deliberately has a null endpoint.
+Site: https://hiroyukiyamamoto.github.io/mseapca-mcp/ (published with GitHub Actions).
+Hosted MCP: https://mseapca-mcp-121643671058.asia-northeast1.run.app/mcp — **private, Google Cloud IAM required**. Authenticated tests passed for all nine tools; anonymous access returns 403. Public access awaits separate approval.
 
 ## What is included
 
@@ -65,7 +65,7 @@ See [VALIDATION.md](VALIDATION.md) for actual results and limitations. GitHub Ac
 
 The gateway enforces 2 MiB/request and shared 60 requests/minute, burst 10. Each analysis runs in a disposable R worker with a 20-second wall-clock limit. Analyses restrict matrix dimensions, memberships, permutations and output. These controls do not establish a monetary ceiling or distributed DoS protection.
 
-Deployment is private by default, with min instances 0, max 1, concurrency 1, request CPU billing and timeout 30 seconds. A verified spend cap and separate final approval are required before anonymous public access. Existing services and billing settings are untouched by this project. A shared Cloud Run cap can affect other services; build/storage charges are separate and caps may overshoot. Do not claim a guaranteed JPY500 total bill.
+Deployment is private by default, with min instances 0, max 1, concurrency 1, request CPU billing and timeout 30 seconds. A verified spend cap and separate final approval are required before anonymous public access. The existing shared Cloud Run cap was increased from JPY400 to JPY1,000 with user approval; existing services and IAM were otherwise unchanged. The separate JPY500 project alert remains an early warning, not a cap. A shared Cloud Run cap can affect other services; build/storage charges are separate and caps may overshoot. Do not claim a guaranteed JPY1,000 total bill.
 
 ## License
 

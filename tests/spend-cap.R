@@ -1,0 +1,8 @@
+if(dir.exists(".library")) .libPaths(c(normalizePath(".library"),.libPaths()))
+source("scripts/spend-cap.R")
+b<-spend_cap_body("121643671058");b$spendCap<-list(outputState="CONFIGURED")
+stopifnot(validate_spend_cap(b,"121643671058"),!validate_spend_cap(b,"999"))
+b$amount$specifiedAmount$units<-"1001";stopifnot(!validate_spend_cap(b,"121643671058"))
+b$amount$specifiedAmount$units<-"1000";b$spendCap$outputState<-"ENFORCED";stopifnot(!validate_spend_cap(b,"121643671058"))
+b$spendCap$outputState<-"CONFIGURED";b$spendCap$reconciling<-TRUE;stopifnot(!validate_spend_cap(b,"121643671058"))
+cat("JPY1000 cap boundary, project scope and enforced/reconciling state rejection passed.\n")

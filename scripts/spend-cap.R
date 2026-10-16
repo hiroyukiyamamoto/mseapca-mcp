@@ -4,9 +4,9 @@ approved_budget_project <- function(project, shared_approval="") {
   grepl("^mseapca-mcp-[a-z0-9-]+$",project) ||
     (identical(project,"stable-century-479407-m7") && identical(shared_approval,project))
 }
-spend_cap_body <- function(project_number, amount = 400L) {
+spend_cap_body <- function(project_number, amount = 1000L) {
   stopifnot(grepl("^[0-9]+$", project_number), length(amount)==1L,
-            is.finite(amount), amount > 0, amount <= 500, amount==floor(amount))
+            is.finite(amount), amount > 0, amount <= 1000, amount==floor(amount))
   list(displayName="loadings-mcp monthly Cloud Run spend cap",
     budgetFilter=list(projects=list(paste0("projects/",project_number)),
       services=list("services/152E-C115-5142"), calendarPeriod="MONTH",
@@ -16,7 +16,7 @@ spend_cap_body <- function(project_number, amount = 400L) {
     notificationsRule=list(enableProjectLevelRecipients=TRUE),
     spendCap=list(inputState="CONFIGURED"))
 }
-validate_spend_cap <- function(budget, project_number, maximum = 400L) {
+validate_spend_cap <- function(budget, project_number, maximum = 1000L) {
   f <- budget$budgetFilter; a <- budget$amount$specifiedAmount; s <- budget$spendCap
   identical(unlist(f$projects, use.names=FALSE), paste0("projects/",project_number)) &&
     identical(unlist(f$services, use.names=FALSE), "services/152E-C115-5142") &&
@@ -58,7 +58,7 @@ run_spend_cap <- function(mode = "plan") {
     if (is.null(page) || !nzchar(page)) break
   }
   valid <- Filter(function(b) isTRUE(validate_spend_cap(b,number)),found)
-  if(length(valid)!=1L) stop("No unique, settled CONFIGURED Cloud Run spend cap <= JPY 400 for this project; DO NOT DEPLOY/PUBLISH")
+  if(length(valid)!=1L) stop("No unique, settled CONFIGURED Cloud Run spend cap <= JPY 1000 for this project; DO NOT DEPLOY/PUBLISH")
   cat("Verified configured spend cap: ",valid[[1]]$name," (JPY ",valid[[1]]$amount$specifiedAmount$units,
       "). This is not a total billing guarantee or a tested enforcement event.\n",sep="")
 }
