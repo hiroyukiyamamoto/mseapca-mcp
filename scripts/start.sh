@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 public_port="${PORT:-8080}"
-[[ "$public_port" =~ ^[0-9]{1,5}$ ]] && (( public_port > 0 && public_port < 65536 && public_port != 8081 )) || { echo 'Invalid PORT'; exit 1; }
+[[ "$public_port" =~ ^[0-9]{1,5}$ ]] && (( public_port > 0 && public_port < 65536 )) || { echo 'Invalid PORT'; exit 1; }
+backend_port=8081
+[[ "$public_port" == 8081 ]] && backend_port=8082
 mkdir -p /tmp/mseapca-nginx/{body,proxy,fastcgi,uwsgi,scgi}
 cat > /tmp/mseapca-nginx/nginx.conf <<EOF
 worker_processes 1;
@@ -26,7 +28,7 @@ http {
     server_name _;
     location = /mcp {
       limit_req zone=global burst=10 nodelay;
-      proxy_pass http://127.0.0.1:8081;
+      proxy_pass http://127.0.0.1:${backend_port};
       proxy_http_version 1.1;
       proxy_set_header Connection "";
       proxy_buffering off;
@@ -40,7 +42,7 @@ http {
 }
 EOF
 nginx -t -c /tmp/mseapca-nginx/nginx.conf
-PORT=8081 Rscript --vanilla R/server.R &
+PORT="$backend_port" Rscript --vanilla R/server.R &
 r_pid=$!
 proxy_pid=""
 cleanup() { kill "$r_pid" ${proxy_pid:+"$proxy_pid"} 2>/dev/null || true; wait "$r_pid" ${proxy_pid:+"$proxy_pid"} 2>/dev/null || true; }
@@ -49,7 +51,7 @@ trap 'exit 0' TERM INT
 ready=false
 for i in {1..100}; do
   kill -0 "$r_pid" 2>/dev/null || exit 1
-  if ( : < /dev/tcp/127.0.0.1/8081 ) 2>/dev/null; then ready=true; break; fi
+  if ( : < /dev/tcp/127.0.0.1/"$backend_port" ) 2>/dev/null; then ready=true; break; fi
   sleep 0.1
 done
 "$ready" || { echo 'R transport failed to start'; exit 1; }

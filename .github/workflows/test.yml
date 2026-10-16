@@ -14,6 +14,7 @@ jobs:
       - run: Rscript --vanilla scripts/install.R
       - run: Rscript --vanilla tests/database.R
       - run: Rscript --vanilla tests/models.R
+      - run: Rscript --vanilla tests/limits.R
       - run: Rscript --vanilla tests/http.R
       - run: Rscript --vanilla examples/generate.R
       - uses: actions/setup-node@v4
@@ -25,11 +26,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: docker build -t mseapca-mcp:test .
-      - run: docker run -d --name mcp -e PORT=8090 -p 8090:8090 mseapca-mcp:test
+      - run: docker run -d --name mcp -e PORT=8081 -p 8081:8081 mseapca-mcp:test
       - name: Initialize over HTTP
         run: |
           for i in $(seq 1 30); do
-            if curl --fail -sS -X POST http://localhost:8090/mcp -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"ci","version":"1"}}}' | tee /tmp/initialize.json | grep -q 'protocolVersion'; then exit 0; fi
+            if curl --fail -sS -X POST http://localhost:8081/mcp -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"ci","version":"1"}}}' | tee /tmp/initialize.json | grep -q 'protocolVersion'; then exit 0; fi
             sleep 2
           done
           docker logs mcp
@@ -37,8 +38,8 @@ jobs:
       - name: Official MCP client through container gateway
         run: |
           docker cp tests/http.R mcp:/tmp/http.R
-          docker exec -e MCP_ENDPOINT=http://127.0.0.1:8090/mcp mcp Rscript --vanilla /tmp/http.R
+          docker exec -e MCP_ENDPOINT=http://127.0.0.1:8081/mcp mcp Rscript --vanilla /tmp/http.R
       - name: Verify HTTP body and burst limits
         run: |
           docker cp scripts/check-limits.R mcp:/tmp/check-limits.R
-          docker exec -e MCP_ENDPOINT=http://127.0.0.1:8090/mcp mcp Rscript --vanilla /tmp/check-limits.R
+          docker exec -e MCP_ENDPOINT=http://127.0.0.1:8081/mcp mcp Rscript --vanilla /tmp/check-limits.R
