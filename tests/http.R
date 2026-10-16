@@ -1,5 +1,7 @@
 if (dir.exists(".library")) .libPaths(c(normalizePath(".library"), .libPaths()))
 run_http_test <- function() {
+  url <- Sys.getenv("MCP_ENDPOINT")
+  if (!nzchar(url)) {
   port <- httpuv::randomPort()
   server <- callr::r_bg(function(root, lib, port) {
     setwd(root); .libPaths(lib); Sys.setenv(PORT = port); source("R/server.R")
@@ -11,6 +13,7 @@ run_http_test <- function() {
     ready <- tryCatch({ httr2::request(url) |> httr2::req_error(is_error = function(resp) FALSE) |> httr2::req_perform(); TRUE }, error = function(e) FALSE)
     if (ready) break
     Sys.sleep(0.1)
+  }
   }
   config <- tempfile(fileext = ".json")
   on.exit(unlink(config), add = TRUE)
@@ -29,6 +32,8 @@ run_http_test <- function() {
   stopifnot(result$ok,length(result$results)>0)
   source("R/utils.R");source("R/database.R");source("R/analysis.R")
   local<-demo_data();stopifnot(isTRUE(all.equal(unlist(local$x),unlist(demo$x),tolerance=1e-12)))
+  reference<-analyze_ora(local$significant,local$detected,local$set_ids)
+  stopifnot(isTRUE(all.equal(result,reference,tolerance=1e-12)))
   sets<-list(sets=list(list(name="a",members=list("a","b","z")),list(name="b",members=list("c","d","e")),list(name="c",members=list("f","g","h"))))
   stopifnot(call("analyze_range",list(significant=list("a","d"),detected=as.list(letters[1:8]),custom_sets=sets,nsim=10L))$ok)
   set.seed(4);x<-matrix_input(matrix(rnorm(80),10,8))

@@ -34,6 +34,10 @@ jobs:
           done
           docker logs mcp
           exit 1
+      - name: Official MCP client through container gateway
+        run: |
+          docker cp tests/http.R mcp:/tmp/http.R
+          docker exec -e MCP_ENDPOINT=http://127.0.0.1:8090/mcp mcp Rscript --vanilla /tmp/http.R
       - name: Verify HTTP body and burst limits
         run: |
           docker cp scripts/check-limits.R mcp:/tmp/check-limits.R
