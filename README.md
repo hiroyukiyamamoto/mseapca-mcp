@@ -53,6 +53,7 @@ Results are full-precision JSON in official MCP text content, including `ok`, co
 ```sh
 Rscript --vanilla tests/models.R
 Rscript --vanilla tests/database.R
+Rscript --vanilla tests/limits.R
 Rscript --vanilla tests/http.R
 Rscript --vanilla examples/generate.R
 node tests/site.mjs
