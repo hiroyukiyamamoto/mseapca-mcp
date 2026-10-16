@@ -1,0 +1,12 @@
+if(dir.exists(".library")) .libPaths(c(normalizePath(".library"),.libPaths()))
+source("R/utils.R");source("R/database.R");source("R/analysis.R")
+demo<-demo_data();result<-analyze_ora(demo$significant,demo$detected,demo$set_ids)
+stopifnot(result$ok)
+dir.create("docs/data",showWarnings=FALSE)
+jsonlite::write_json(result,"docs/data/fasting-ora.json",auto_unbox=TRUE,digits=NA,pretty=TRUE,null="null")
+rows<-head(result$results,10)
+p<-vapply(rows,function(r)as.numeric(r$statistics[["p.value"]]),numeric(1))
+if(!length(p)||anyNA(p)) {print(rows[[1]]);stop("Unexpected official p-value column")}
+svg("docs/images/fasting-ora.svg",width=10,height=5)
+par(mar=c(4,21,2,1));barplot(rev(-log10(pmax(p,.Machine$double.xmin))),names.arg=rev(vapply(rows,function(r)substr(r$metadata$name,1,42),character(1))),horiz=TRUE,las=1,col="#286f60",border=NA,xlab="-log10(ORA p-value)",cex.names=.75)
+dev.off()

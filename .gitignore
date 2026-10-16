@@ -1,0 +1,7 @@
+.library/
+.reference/
+test-results/
+.Rhistory
+.RData
+.Renviron
+*.tar.gz

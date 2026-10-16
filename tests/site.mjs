@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import {readFileSync,existsSync} from 'node:fs';
+const html=readFileSync('docs/index.html','utf8');
+for(const id of ['overview','features','examples','start','tools','documentation','references','about'])assert(html.includes(`id="${id}"`));
+for(const [,src] of html.matchAll(/(?:src|href)="([^"#]+)"/g))if(!/^https?:/.test(src))assert(existsSync(`docs/${src}`),src);
+assert.equal(JSON.parse(readFileSync('docs/config.json','utf8').replace(/^\uFEFF/,'' )).endpoint,null);
+const result=JSON.parse(readFileSync('docs/data/fasting-ora.json','utf8'));
+assert(result.ok);assert.equal(result.conditions.detected_count,282);assert.equal(result.conditions.selected_sets,20);
+assert(html.includes('name="viewport"'));assert(!html.includes('.run.app'));
+assert(html.includes('not been deployed'));console.log('Website links, assets, viewport, pending endpoint and real ORA example passed.');

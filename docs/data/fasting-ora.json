@@ -1,0 +1,610 @@
+{
+  "analysis": "ora",
+  "package_version": "2.2.1",
+  "conditions": {
+    "method": "det",
+    "identifier": "name",
+    "significant_count": 49,
+    "detected_count": 282,
+    "selected_sets": 20,
+    "multiple_testing": "Upstream Benjamini-Hochberg across all selected sets before output truncation",
+    "lambda": null,
+    "detected_outside_selected_sets": 257
+  },
+  "total_results": 20,
+  "returned_results": 20,
+  "truncated": false,
+  "results": [
+    {
+      "set_id": "R-HSA-9660826",
+      "metadata": {
+        "name": "Purinergic signaling in leishmaniasis infection",
+        "source": "Reactome",
+        "organism": "Homo sapiens (human)"
+      },
+      "statistics": {
+        "p.value": 0.192466587432101,
+        "q.value": 0.872095101705913
+      },
+      "overlap_count": 3,
+      "overlap": [
+        "gmp",
+        "gdp",
+        "amp"
+      ],
+      "overlap_truncated": false,
+      "contingency_table": {
+        "rows": [
+          [
+            3,
+            6
+          ],
+          [
+            46,
+            227
+          ]
+        ]
+      }
+    },
+    {
+      "set_id": "R-HSA-73817",
+      "metadata": {
+        "name": "Purine ribonucleoside monophosphate biosynthesis",
+        "source": "Reactome",
+        "organism": "Homo sapiens (human)"
+      },
+      "statistics": {
+        "p.value": 0.242518464691428,
+        "q.value": 0.872095101705913
+      },
+      "overlap_count": 3,
+      "overlap": [
+        "gmp",
+        "gdp",
+        "amp"
+      ],
+      "overlap_truncated": false,
+      "contingency_table": {
+        "rows": [
+          [
+            3,
+            7
+          ],
+          [
+            46,
+            226
+          ]
+        ]
+      }
+    },
+    {
+      "set_id": "R-HSA-5628897",
+      "metadata": {
+        "name": "TP53 Regulates Metabolic Genes",
+        "source": "Reactome",
+        "organism": "Homo sapiens (human)"
+      },
+      "statistics": {
+        "p.value": 0.279809349042202,
+        "q.value": 0.872095101705913
+      },
+      "overlap_count": 2,
+      "overlap": [
+        "gdp",
+        "amp"
+      ],
+      "overlap_truncated": false,
+      "contingency_table": {
+        "rows": [
+          [
+            2,
+            4
+          ],
+          [
+            47,
+            229
+          ]
+        ]
+      }
+    },
+    {
+      "set_id": "R-HSA-74217",
+      "metadata": {
+        "name": "Purine salvage",
+        "source": "Reactome",
+        "organism": "Homo sapiens (human)"
+      },
+      "statistics": {
+        "p.value": 0.279809349042202,
+        "q.value": 0.872095101705913
+      },
+      "overlap_count": 2,
+      "overlap": [
+        "gmp",
+        "amp"
+      ],
+      "overlap_truncated": false,
+      "contingency_table": {
+        "rows": [
+          [
+            2,
+            4
+          ],
+          [
+            47,
+            229
+          ]
+        ]
+      }
+    },
+    {
+      "set_id": "R-HSA-499943",
+      "metadata": {
+        "name": "Interconversion of nucleotide di- and triphosphates",
+        "source": "Reactome",
+        "organism": "Homo sapiens (human)"
+      },
+      "statistics": {
+        "p.value": 0.34725381046776,
+        "q.value": 0.872095101705913
+      },
+      "overlap_count": 3,
+      "overlap": [
+        "gmp",
+        "gdp",
+        "amp"
+      ],
+      "overlap_truncated": false,
+      "contingency_table": {
+        "rows": [
+          [
+            3,
+            9
+          ],
+          [
+            46,
+            224
+          ]
+        ]
+      }
+    },
+    {
+      "set_id": "R-HSA-70263",
+      "metadata": {
+        "name": "Gluconeogenesis",
+        "source": "Reactome",
+        "organism": "Homo sapiens (human)"
+      },
+      "statistics": {
+        "p.value": 0.350352761130022,
+        "q.value": 0.872095101705913
+      },
+      "overlap_count": 2,
+      "overlap": [
+        "gdp",
+        "amp"
+      ],
+      "overlap_truncated": false,
+      "contingency_table": {
+        "rows": [
+          [
+            2,
+            5
+          ],
+          [
+            47,
+            228
+          ]
+        ]
+      }
+    },
+    {
+      "set_id": "R-HSA-8850843",
+      "metadata": {
+        "name": "Phosphate bond hydrolysis by NTPDase proteins",
+        "source": "Reactome",
+        "organism": "Homo sapiens (human)"
+      },
+      "statistics": {
+        "p.value": 0.39977067900518,
+        "q.value": 0.872095101705913
+      },
+      "overlap_count": 3,
+      "overlap": [
+        "gmp",
+        "gdp",
+        "amp"
+      ],
+      "overlap_truncated": false,
+      "contingency_table": {
+        "rows": [
+          [
+            3,
+            10
+          ],
+          [
+            46,
+            223
+          ]
+        ]
+      }
+    },
+    {
+      "set_id": "R-HSA-418594",
+      "metadata": {
+        "name": "G alpha (i) signalling events",
+        "source": "Reactome",
+        "organism": "Homo sapiens (human)"
+      },
+      "statistics": {
+        "p.value": 0.418587479731332,
+        "q.value": 0.872095101705913
+      },
+      "overlap_count": 2,
+      "overlap": [
+        "gdp",
+        "3-hydroxybutyric acid"
+      ],
+      "overlap_truncated": false,
+      "contingency_table": {
+        "rows": [
+          [
+            2,
+            6
+          ],
+          [
+            47,
+            227
+          ]
+        ]
+      }
+    },
+    {
+      "set_id": "R-HSA-193775",
+      "metadata": {
+        "name": "Synthesis of bile acids and bile salts via 24-hydroxycholesterol",
+        "source": "Reactome",
+        "organism": "Homo sapiens (human)"
+      },
+      "statistics": {
+        "p.value": 0.685433968547169,
+        "q.value": 0.872095101705913
+      },
+      "overlap_count": 1,
+      "overlap": [
+        "amp"
+      ],
+      "overlap_truncated": false,
+      "contingency_table": {
+        "rows": [
+          [
+            1,
+            5
+          ],
+          [
+            48,
+            228
+          ]
+        ]
+      }
+    },
+    {
+      "set_id": "R-HSA-381753",
+      "metadata": {
+        "name": "Olfactory Signaling Pathway",
+        "source": "Reactome",
+        "organism": "Homo sapiens (human)"
+      },
+      "statistics": {
+        "p.value": 0.685433968547169,
+        "q.value": 0.872095101705913
+      },
+      "overlap_count": 1,
+      "overlap": [
+        "gdp"
+      ],
+      "overlap_truncated": false,
+      "contingency_table": {
+        "rows": [
+          [
+            1,
+            5
+          ],
+          [
+            48,
+            228
+          ]
+        ]
+      }
+    },
+    {
+      "set_id": "R-HSA-390247",
+      "metadata": {
+        "name": "Beta-oxidation of very long chain fatty acids",
+        "source": "Reactome",
+        "organism": "Homo sapiens (human)"
+      },
+      "statistics": {
+        "p.value": 0.685433968547169,
+        "q.value": 0.872095101705913
+      },
+      "overlap_count": 1,
+      "overlap": [
+        "amp"
+      ],
+      "overlap_truncated": false,
+      "contingency_table": {
+        "rows": [
+          [
+            1,
+            5
+          ],
+          [
+            48,
+            228
+          ]
+        ]
+      }
+    },
+    {
+      "set_id": "R-HSA-6782315",
+      "metadata": {
+        "name": "tRNA modification in the nucleus and cytosol",
+        "source": "Reactome",
+        "organism": "Homo sapiens (human)"
+      },
+      "statistics": {
+        "p.value": 0.685433968547169,
+        "q.value": 0.872095101705913
+      },
+      "overlap_count": 1,
+      "overlap": [
+        "amp"
+      ],
+      "overlap_truncated": false,
+      "contingency_table": {
+        "rows": [
+          [
+            1,
+            5
+          ],
+          [
+            48,
+            228
+          ]
+        ]
+      }
+    },
+    {
+      "set_id": "R-HSA-193368",
+      "metadata": {
+        "name": "Synthesis of bile acids and bile salts via 7alpha-hydroxycholesterol",
+        "source": "Reactome",
+        "organism": "Homo sapiens (human)"
+      },
+      "statistics": {
+        "p.value": 0.741280836450026,
+        "q.value": 0.872095101705913
+      },
+      "overlap_count": 1,
+      "overlap": [
+        "amp"
+      ],
+      "overlap_truncated": false,
+      "contingency_table": {
+        "rows": [
+          [
+            1,
+            6
+          ],
+          [
+            48,
+            227
+          ]
+        ]
+      }
+    },
+    {
+      "set_id": "R-HSA-196807",
+      "metadata": {
+        "name": "Nicotinate metabolism",
+        "source": "Reactome",
+        "organism": "Homo sapiens (human)"
+      },
+      "statistics": {
+        "p.value": 0.741280836450026,
+        "q.value": 0.872095101705913
+      },
+      "overlap_count": 1,
+      "overlap": [
+        "amp"
+      ],
+      "overlap_truncated": false,
+      "contingency_table": {
+        "rows": [
+          [
+            1,
+            6
+          ],
+          [
+            48,
+            227
+          ]
+        ]
+      }
+    },
+    {
+      "set_id": "R-HSA-2161541",
+      "metadata": {
+        "name": "Abacavir metabolism",
+        "source": "Reactome",
+        "organism": "Homo sapiens (human)"
+      },
+      "statistics": {
+        "p.value": 0.741280836450026,
+        "q.value": 0.872095101705913
+      },
+      "overlap_count": 1,
+      "overlap": [
+        "amp"
+      ],
+      "overlap_truncated": false,
+      "contingency_table": {
+        "rows": [
+          [
+            1,
+            6
+          ],
+          [
+            48,
+            227
+          ]
+        ]
+      }
+    },
+    {
+      "set_id": "R-HSA-416476",
+      "metadata": {
+        "name": "G alpha (q) signalling events",
+        "source": "Reactome",
+        "organism": "Homo sapiens (human)"
+      },
+      "statistics": {
+        "p.value": 0.741280836450026,
+        "q.value": 0.872095101705913
+      },
+      "overlap_count": 1,
+      "overlap": [
+        "gdp"
+      ],
+      "overlap_truncated": false,
+      "contingency_table": {
+        "rows": [
+          [
+            1,
+            6
+          ],
+          [
+            48,
+            227
+          ]
+        ]
+      }
+    },
+    {
+      "set_id": "R-HSA-71403",
+      "metadata": {
+        "name": "Citric acid cycle (TCA cycle)",
+        "source": "Reactome",
+        "organism": "Homo sapiens (human)"
+      },
+      "statistics": {
+        "p.value": 0.741280836450026,
+        "q.value": 0.872095101705913
+      },
+      "overlap_count": 1,
+      "overlap": [
+        "gdp"
+      ],
+      "overlap_truncated": false,
+      "contingency_table": {
+        "rows": [
+          [
+            1,
+            6
+          ],
+          [
+            48,
+            227
+          ]
+        ]
+      }
+    },
+    {
+      "set_id": "R-HSA-196757",
+      "metadata": {
+        "name": "Metabolism of folate and pterines",
+        "source": "Reactome",
+        "organism": "Homo sapiens (human)"
+      },
+      "statistics": {
+        "p.value": 1,
+        "q.value": 1
+      },
+      "overlap_count": 0,
+      "overlap": [],
+      "overlap_truncated": false,
+      "contingency_table": {
+        "rows": [
+          [
+            0,
+            6
+          ],
+          [
+            49,
+            227
+          ]
+        ]
+      }
+    },
+    {
+      "set_id": "R-HSA-2046106",
+      "metadata": {
+        "name": "alpha-linolenic acid (ALA) metabolism",
+        "source": "Reactome",
+        "organism": "Homo sapiens (human)"
+      },
+      "statistics": {
+        "p.value": 1,
+        "q.value": 1
+      },
+      "overlap_count": 0,
+      "overlap": [],
+      "overlap_truncated": false,
+      "contingency_table": {
+        "rows": [
+          [
+            0,
+            6
+          ],
+          [
+            49,
+            227
+          ]
+        ]
+      }
+    },
+    {
+      "set_id": "R-HSA-446199",
+      "metadata": {
+        "name": "Synthesis of dolichyl-phosphate",
+        "source": "Reactome",
+        "organism": "Homo sapiens (human)"
+      },
+      "statistics": {
+        "p.value": 1,
+        "q.value": 1
+      },
+      "overlap_count": 0,
+      "overlap": [],
+      "overlap_truncated": false,
+      "contingency_table": {
+        "rows": [
+          [
+            0,
+            6
+          ],
+          [
+            49,
+            227
+          ]
+        ]
+      }
+    }
+  ],
+  "nonfinite_statistics": 0,
+  "interpretation": "Exploratory enrichment; verify identifier mapping, biological context and study design.",
+  "ok": true,
+  "warnings": [],
+  "schema_version": "1.0"
+}

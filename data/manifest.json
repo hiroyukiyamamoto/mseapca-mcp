@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "upstream_repository": "hiroyukiyamamoto/AI",
+  "upstream_commit": "1fa2e6b7a479429e2842c60c15208d105e8473db",
+  "upstream_path": "apps/mseapca-db-web/seed_data/default_pathways.json",
+  "upstream_blob": "e51a166b71647a1bcdaf9c3ac0a3e9e393620c24",
+  "input_records": 5046,
+  "retained_records": 4741,
+  "source_counts": {
+    "ILDMDB": 60,
+    "MACdb": 17,
+    "MetSigDis": 18,
+    "PathBank": 870,
+    "ProMENDA": 514,
+    "Reactome": 1731,
+    "WikiPathways": 599,
+    "integMET": 932
+  },
+  "excluded": {
+    "source": 305,
+    "metadata": 0,
+    "metabolite": 35
+  },
+  "removed_cross_references": 75117,
+  "policy": "Exclude KEGG-origin sets, restricted metadata, all KEGG cross-references and primary compound IDs. No built-in mseapca pathway data or upstream fallback exports are used.",
+  "license_note": "Database sources retain their own terms. Non-KEGG does not imply unrestricted commercial use; see DATA_SOURCES.md."
+}
