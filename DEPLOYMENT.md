@@ -75,3 +75,27 @@ Deletion does not remove retained images/source archives or already incurred cha
 ## Pages
 
 `.github/workflows/pages.yml` publishes docs by manual dispatch. Pages source is GitHub Actions (workflow). After approved site changes, push and run `gh workflow run pages.yml --repo hiroyukiyamamoto/mseapca-mcp`. Keep endpoint/access/authentication in docs/config.json consistent with actual IAM, and update setup text. The private URL must never be advertised as anonymously accessible.
+
+## Prepared public-access proposal (not executed)
+
+After separate final approval, grant anonymous invocation on this service only:
+
+```sh
+gcloud run services add-iam-policy-binding mseapca-mcp \
+  --project stable-century-479407-m7 --region asia-northeast1 \
+  --member=allUsers --role=roles/run.invoker
+```
+
+This does not change project-wide IAM or another service. Invoker IAM checking remains enabled. No extra paid product is required. After granting access, rerun tests/http.R, scripts/check-remote-http.R and scripts/check-limits.R without CLOUD_RUN_ID_TOKEN, then change docs/config.json access/authentication and setup text only if anonymous tests pass.
+
+Residual risks to accept before this action: shared per-instance throttling is not distributed DoS protection; unregistered users can consume the shared cap; the JPY1,000 limit applies to all Cloud Run services in the project and can pause existing services; reporting delays and non-Run costs can exceed the target. Statistical and source-license limits still apply. Manual ChatGPT/Claude compatibility is not claimed until actually tested.
+
+Rollback for anonymous access:
+
+```sh
+gcloud run services remove-iam-policy-binding mseapca-mcp \
+  --project stable-century-479407-m7 --region asia-northeast1 \
+  --member=allUsers --role=roles/run.invoker
+```
+
+Verify anonymous403 afterward. Do not lift the shared spend cap to keep the service online.

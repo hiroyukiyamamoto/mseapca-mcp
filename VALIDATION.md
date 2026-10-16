@@ -26,3 +26,5 @@ Scientific scope: exact namespace matching only; no species conversion or classi
 - OBSERVED: built-in memory distribution sample means up to 56.91% (~291.4MiB), two points during demo tests. Not peak/worst-case capacity. No new monitoring service was configured.
 
 Remaining unverified: anonymous public MCP service (not authorized/published), actual ChatGPT/Claude sessions, worst-case capacity, actual invoice totals and spend-cap enforcement under exhaustion. See DEPLOYMENT.md for exact state, costs and emergency stop.
+- PASS: latest deployed Pages content displays the actual private endpoint on both viewports; the browser test now bypasses its cache and can assert EXPECTED_ENDPOINT to avoid accepting an old deployment.
+- Latest follow-up CI: https://github.com/hiroyukiyamamoto/mseapca-mcp/actions/runs/38932888676 . Docker job PASS (including all tools through the gateway). Linux standalone job was still preparing R at the reporting point and is not claimed as completed; the prior implementation's Linux job passed as recorded above. Actual private Cloud Run tests independently passed on the deployed Linux image.
