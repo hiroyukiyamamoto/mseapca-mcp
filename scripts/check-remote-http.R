@@ -23,4 +23,3 @@ report <- list(endpoint=url,anonymous_status=httr2::resp_status(anonymous),inval
 dir.create("test-results",showWarnings=FALSE)
 jsonlite::write_json(report,"test-results/remote-http.json",auto_unbox=TRUE,pretty=TRUE)
 cat(jsonlite::toJSON(report,auto_unbox=TRUE,pretty=TRUE),"\n")
-

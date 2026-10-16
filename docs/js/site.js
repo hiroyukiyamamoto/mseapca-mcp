@@ -1,4 +1,4 @@
-fetch('config.json').then(r=>{if(!r.ok)throw Error('config');return r.json()}).then(c=>{
+fetch('config.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('config');return r.json()}).then(c=>{
  const node=document.getElementById('endpoint');
  if(c.endpoint){const u=new URL(c.endpoint);if(u.protocol!=='https:'||!u.pathname.endsWith('/mcp'))throw Error('endpoint');node.textContent=c.endpoint;
  document.getElementById('claude-command').textContent=c.access==='private'?'Hosted endpoint is private (Google Cloud IAM). See local setup in the repository.':'claude mcp add --transport http mseapca-mcp '+c.endpoint;}

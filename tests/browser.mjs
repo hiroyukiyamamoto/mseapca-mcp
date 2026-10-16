@@ -46,6 +46,8 @@ try {
   const {sessionId} = await send('Target.attachToTarget',{targetId,flatten:true});
   const evaluate = async expression => (await send('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true},sessionId)).result.value;
   await send('Page.enable',{},sessionId);
+  await send('Network.enable',{},sessionId);
+  await send('Network.setCacheDisabled',{cacheDisabled:true},sessionId);
   const results = [];
   for (const [label,width,height] of [['desktop',1440,1000],['mobile',390,844]]) {
     await send('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:label==='mobile'},sessionId);
@@ -60,6 +62,7 @@ try {
       await new Promise(done=>setTimeout(done,200));
     }
     assert(state.title.startsWith('mseapca MCP'));
+    if(process.env.EXPECTED_ENDPOINT)assert.equal(state.endpoint,process.env.EXPECTED_ENDPOINT);
     assert(!state.endpoint.startsWith('Loading '),`${label}: endpoint configuration still loading`);
     assert.equal(state.overflow,false,`${label}: horizontal overflow`);
     assert.deepEqual(state.brokenAnchors,[]);
