@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "mseapca-mcp": {
+      "type": "http",
+      "url": "https://mseapca-mcp-121643671058.asia-northeast1.run.app/mcp"
+    }
+  }
+}

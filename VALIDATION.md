@@ -11,7 +11,7 @@ Local Windows R 4.4.0, mseapca 2.2.1 / loadings 0.6.1 / ellmer 0.5.0 / pinned mc
 - PASS: local Edge browser, desktop 1440x1000 and mobile 390x844; image loading, internal anchors, pending endpoint text and no horizontal overflow. Static link/asset and actual example JSON checks passed.
 - PASS: Linux R 4.5.2 and Docker CI on implementation commit 8b029de: https://github.com/hiroyukiyamamoto/mseapca-mcp/actions/runs/38930283826 . Docker built successfully, started on PORT=8081, passed official MCP client tests for all tools/analysis families, rejected oversized bodies (413), throttled bursts (429), and recovered.
 
-At initial implementation, cloud deployment and public Pages were unverified. The authorized deployment results below supersede that initial state; public MCP IAM remains unchanged.
+At initial implementation, cloud deployment and public Pages were unverified. The authorized deployment results below supersede that initial state; later public-access results are recorded below.
 
 Scientific scope: exact namespace matching only; no species conversion or classifier validation. The real-data ORA demo applies human snapshot sets to mouse metabolites for software illustration, not validated cross-species inference. Pathway licenses are separate; commercial clearance is unresolved for some sources. See DATA_SOURCES.md.
 - PASS: read-only Google Cloud preflight: current project identified, no same-name service, existing shared JPY400 Cloud Run spend cap verified before the later authorized update recorded below.
@@ -25,6 +25,15 @@ Scientific scope: exact namespace matching only; no species conversion or classi
 - PASS: existing shared Cloud Run spend cap increased to JPY1,000 with approval and verified CONFIGURED; scope unchanged. Amount is not a total invoice guarantee.
 - OBSERVED: built-in memory distribution sample means up to 56.91% (~291.4MiB), two points during demo tests. Not peak/worst-case capacity. No new monitoring service was configured.
 
-Remaining unverified: anonymous public MCP service (not authorized/published), actual ChatGPT/Claude sessions, worst-case capacity, actual invoice totals and spend-cap enforcement under exhaustion. See DEPLOYMENT.md for exact state, costs and emergency stop.
+Remaining unverified after private deployment: actual ChatGPT/Claude sessions, worst-case capacity, actual invoice totals and spend-cap enforcement under exhaustion. Anonymous access was subsequently approved and tested below. See DEPLOYMENT.md for exact state, costs and emergency stop.
 - PASS: latest deployed Pages content displays the actual private endpoint on both viewports; the browser test now bypasses its cache and can assert EXPECTED_ENDPOINT to avoid accepting an old deployment.
 - Latest follow-up CI: https://github.com/hiroyukiyamamoto/mseapca-mcp/actions/runs/38932888676 . Docker job PASS (including all tools through the gateway). Linux standalone job was still preparing R at the reporting point and is not claimed as completed; the prior implementation's Linux job passed as recorded above. Actual private Cloud Run tests independently passed on the deployed Linux image.
+
+## Authorized anonymous public deployment
+
+- Shared JPY1,000 Cloud Run spend cap reverified CONFIGURED immediately before granting public access.
+- Only mseapca-mcp received allUsers -> roles/run.invoker after final approval. No other service or project-wide IAM was modified.
+- PASS on actual public endpoint without CLOUD_RUN_ID_TOKEN: official R MCP initialize, tools/list (nine), every tool and ORA/range/MSEA/SSEA, numeric round-trip, excluded/invalid input rejection.
+- PASS: anonymous initialize200; malformed JSON400; unknown method -32601; recovery initialize; oversized body413; burst429 and cooldown recovery.
+- Public site configuration and connection instructions updated only after those anonymous checks passed. Actual ChatGPT/Claude sessions are still unverified; Claude Code CLI is unavailable locally.
+- The previous follow-up Linux job stalled while obtaining R; the standalone job now uses the same pinned official rocker/r-ver:4.5.2 image as production. Analysis code and package versions are unchanged. The previous Docker job passed; a fresh full CI run validates the environment change.

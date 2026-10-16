@@ -5,7 +5,7 @@ Metabolite set enrichment for AI agents, using R, **mseapca 2.2.1** and the offi
 Repository: https://github.com/hiroyukiyamamoto/mseapca-mcp
 
 Site: https://hiroyukiyamamoto.github.io/mseapca-mcp/ (published with GitHub Actions).
-Hosted MCP: https://mseapca-mcp-121643671058.asia-northeast1.run.app/mcp — **private, Google Cloud IAM required**. Authenticated tests passed for all nine tools; anonymous access returns 403. Public access awaits separate approval.
+Hosted MCP: https://mseapca-mcp-121643671058.asia-northeast1.run.app/mcp — **free public research access; no registration, API key or authentication required**. Anonymous tests passed for all nine tools. Best-effort service; rate limits and budget pauses apply.
 
 ## What is included
 
@@ -35,7 +35,13 @@ docker run --rm -e PORT=8080 -p 8080:8080 mseapca-mcp
 claude mcp add --transport http mseapca-mcp http://localhost:8080/mcp
 ```
 
-This local command is supported by Claude Code's HTTP transport. A real Claude/ChatGPT session is not yet verified. Public endpoint and authentication instructions must be added after deployment.
+This local command is supported by Claude Code's HTTP transport. A real Claude/ChatGPT session is not yet verified. Hosted connection (no authentication header required):
+
+```sh
+claude mcp add --transport http mseapca-mcp https://mseapca-mcp-121643671058.asia-northeast1.run.app/mcp
+```
+
+This follows the [official Claude Code HTTP syntax](https://code.claude.com/docs/en/mcp). See [example MCP configuration](examples/mcp-config.json). Official R MCP client tests passed; manual ChatGPT/Claude sessions remain unverified.
 
 ## Using the tools
 

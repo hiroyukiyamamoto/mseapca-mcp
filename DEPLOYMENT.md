@@ -1,4 +1,4 @@
-﻿# Deployment and operations
+# Deployment and operations
 
 ## Current status
 
@@ -6,11 +6,11 @@
 - Project / region: `stable-century-479407-m7` / `asia-northeast1`.
 - Service / revision: `mseapca-mcp` / `mseapca-mcp-00001-td9`, ready, 100% traffic.
 - Endpoint: https://mseapca-mcp-121643671058.asia-northeast1.run.app/mcp .
-- Access: **private, Google Cloud IAM required**. No allUsers/allAuthenticatedUsers bindings; anonymous initialize returns 403. Public access awaits separate approval.
+- Access: **public, no registration or API key required**. After explicit final approval, allUsers received roles/run.invoker on mseapca-mcp only. Invoker IAM checking remains enabled; anonymous initialize returns 200.
 - Runtime: existing role-free `loadings-mcp-runtime@stable-century-479407-m7.iam.gserviceaccount.com`; permissions were not changed.
 - Resources: 1 CPU, 512 MiB, request CPU billing, startup CPU boost; min0/max1 at service/revision levels, concurrency1, timeout30s.
 
-The user approved Pages publication, private image build/deployment and increasing the existing shared Cloud Run spend cap to **JPY1,000/month**. No other service or service IAM was changed. No APIs or additional paid monitoring services were enabled.
+The user approved Pages publication, private image build/deployment, subsequent anonymous public access, and increasing the existing shared Cloud Run spend cap to **JPY1,000/month**. No other service or service IAM was changed. No APIs or additional paid monitoring services were enabled.
 
 ## Cost protection
 
@@ -40,22 +40,21 @@ asia-northeast1-docker.pkg.dev/stable-century-479407-m7/cloud-run-source-deploy/
 
 `scripts/deploy.sh` remains private by default, verifies the configured <=JPY1,000 cap and asks before deployment. Specify GOOGLE_CLOUD_PROJECT, IMAGE, RUNTIME_SERVICE_ACCOUNT, BILLING_ACCOUNT_ID and APPROVE_SHARED_PROJECT. It targets only mseapca-mcp in asia-northeast1. New builds or deployments need authorization; unrelated services must not be changed.
 
-## Private endpoint tests
+## Public endpoint tests
 
-For an authorized Google Cloud user, PowerShell:
+No credentials are needed. PowerShell:
 
 ```powershell
 $env:MCP_ENDPOINT='https://mseapca-mcp-121643671058.asia-northeast1.run.app/mcp'
-$env:CLOUD_RUN_ID_TOKEN=(gcloud auth print-identity-token --quiet)
-try {
-  Rscript --vanilla tests/http.R
-  Rscript --vanilla scripts/check-remote-http.R
-  Rscript --vanilla scripts/check-limits.R
-} finally { Remove-Item Env:CLOUD_RUN_ID_TOKEN }
+Remove-Item Env:CLOUD_RUN_ID_TOKEN -ErrorAction SilentlyContinue
+Rscript --vanilla tests/http.R
+Rscript --vanilla scripts/check-remote-http.R
+Rscript --vanilla scripts/check-limits.R
 ```
 
-The token stays in process environment and is never printed, committed or written into MCP config files. IAM identity tokens are not an OAuth service for end-user MCP clients. Manual ChatGPT/Claude connections remain unverified.
+Anonymous official R MCP client tests passed for all nine tools, ORA, range estimation, MSEA and SSEA. Actual public endpoint checks passed: anonymous200, malformed JSON400, unknown method -32601, recovery initialize, body413, rate429 and cooldown recovery. Actual ChatGPT/Claude sessions remain unverified. Supported Claude Code command syntax is linked in README and the site; this is distinct from a successful manual client session.
 
+The preceding private deployment also passed authenticated tests before anonymous access was approved. Historical results:
 Authenticated official R MCP tests passed for initialization, nine-tool listing, every tool, all four analysis families, precision and invalid inputs. Actual endpoint checks passed: anonymous403, malformed JSON400, unknown method -32601, initialize recovery, body413, rate429 and recovery. Gateway limits: 2MiB, shared60/minute with burst10, worker20s, proxy25s. Per-instance throttling is not comprehensive distributed DoS protection.
 
 Built-in Cloud Run memory distributions during the demo tests had two points, with maximum sample mean 56.91% (~291.4 MiB of 512MiB). These are sample means, not instantaneous peaks or worst-case capacity guarantees. No out-of-memory failure occurred in the demo suite; upper-bound workloads and actual invoice totals remain unverified. Keep 512MiB until broader measurements justify a change.
@@ -64,7 +63,7 @@ Built-in Cloud Run memory distributions during the demo tests had two points, wi
 
 Use existing Cloud Run metrics for this service's requests, response classes, latency and memory, plus Billing reports filtered by project/service. No custom paid monitoring was added. Cap notifications occur at 50%, 80%, 100%; the early project alert is separate. Avoid repeated automated health checks that prevent scaling to zero.
 
-The service is currently private. If anonymous access is approved later, stop it by removing only its allUsers invoker binding and verifying anonymous403. If invoker IAM checking was disabled, re-enable it as well. For an emergency full stop, delete only this service after approval:
+The service is currently public. Stop anonymous access by removing only its allUsers invoker binding and verifying anonymous403. If invoker IAM checking was disabled, re-enable it as well. For an emergency full stop, delete only this service after approval:
 
 ```sh
 gcloud run services delete mseapca-mcp --project stable-century-479407-m7 --region asia-northeast1
@@ -76,9 +75,9 @@ Deletion does not remove retained images/source archives or already incurred cha
 
 `.github/workflows/pages.yml` publishes docs by manual dispatch. Pages source is GitHub Actions (workflow). After approved site changes, push and run `gh workflow run pages.yml --repo hiroyukiyamamoto/mseapca-mcp`. Keep endpoint/access/authentication in docs/config.json consistent with actual IAM, and update setup text. The private URL must never be advertised as anonymously accessible.
 
-## Prepared public-access proposal (not executed)
+## Approved public-access change (executed)
 
-After separate final approval, grant anonymous invocation on this service only:
+After explicit final approval, this command granted anonymous invocation on this service only:
 
 ```sh
 gcloud run services add-iam-policy-binding mseapca-mcp \
@@ -86,9 +85,9 @@ gcloud run services add-iam-policy-binding mseapca-mcp \
   --member=allUsers --role=roles/run.invoker
 ```
 
-This does not change project-wide IAM or another service. Invoker IAM checking remains enabled. No extra paid product is required. After granting access, rerun tests/http.R, scripts/check-remote-http.R and scripts/check-limits.R without CLOUD_RUN_ID_TOKEN, then change docs/config.json access/authentication and setup text only if anonymous tests pass.
+This does not change project-wide IAM or another service. Invoker IAM checking remains enabled. No extra paid product is required. After granting access, all three anonymous checks passed; docs/config.json and setup text were then updated to public/no authentication.
 
-Residual risks to accept before this action: shared per-instance throttling is not distributed DoS protection; unregistered users can consume the shared cap; the JPY1,000 limit applies to all Cloud Run services in the project and can pause existing services; reporting delays and non-Run costs can exceed the target. Statistical and source-license limits still apply. Manual ChatGPT/Claude compatibility is not claimed until actually tested.
+Accepted residual risks: shared per-instance throttling is not distributed DoS protection; unregistered users can consume the shared cap; the JPY1,000 limit applies to all Cloud Run services in the project and can pause existing services; reporting delays and non-Run costs can exceed the target. Statistical and source-license limits still apply. Manual ChatGPT/Claude compatibility is not claimed until actually tested.
 
 Rollback for anonymous access:
 

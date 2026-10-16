@@ -10,7 +10,7 @@ if(nzchar(token)) authenticated <- httr2::req_auth_bearer_token(base,token)
 payload <- list(jsonrpc="2.0",id=1L,method="initialize",params=list(protocolVersion="2025-06-18",
   capabilities=structure(list(),names=character()),clientInfo=list(name="mseapca-http-check",version="1")))
 anonymous <- base |> httr2::req_body_json(payload) |> httr2::req_perform()
-if(nzchar(token)) stopifnot(httr2::resp_status(anonymous)==403L)
+if(nzchar(token)) stopifnot(httr2::resp_status(anonymous)==403L) else stopifnot(httr2::resp_status(anonymous)==200L)
 bad_json <- authenticated |> httr2::req_body_raw("{",type="application/json") |> httr2::req_perform()
 stopifnot(httr2::resp_status(bad_json)==400L)
 unknown <- authenticated |> httr2::req_body_json(list(jsonrpc="2.0",id=2L,method="unknown_method")) |>
