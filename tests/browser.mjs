@@ -55,7 +55,7 @@ try {
     let state;
     for (let attempt=0;attempt<80;attempt++) {
       await evaluate(`document.querySelectorAll('img').forEach(image=>image.loading='eager')`);
-      state = await evaluate(`({ready:document.readyState,title:document.title,endpoint:document.getElementById('endpoint')?.textContent,overflow:document.documentElement.scrollWidth>innerWidth,brokenAnchors:[...document.querySelectorAll('a[href^="#"]')].filter(a=>a.hash&& !document.getElementById(a.hash.slice(1))).map(a=>a.hash),images:[...document.images].map(i=>({src:i.src,loaded:i.complete&&i.naturalWidth>0}))})`);
+      state = await evaluate(`({ready:document.readyState,title:document.title,endpoint:document.getElementById('endpoint')?.textContent,command:document.getElementById('claude-command')?.textContent,overflow:document.documentElement.scrollWidth>innerWidth,brokenAnchors:[...document.querySelectorAll('a[href^="#"]')].filter(a=>a.hash&& !document.getElementById(a.hash.slice(1))).map(a=>a.hash),images:[...document.images].map(i=>({src:i.src,loaded:i.complete&&i.naturalWidth>0}))})`);
       if (state?.ready === 'complete' && state.endpoint && !state.endpoint.startsWith('Loading ') && state.images.every(i=>i.loaded)) break;
       // Loading=lazy images need scrolling into view for verification.
       await evaluate(`document.getElementById('examples')?.scrollIntoView()`);
@@ -63,6 +63,7 @@ try {
     }
     assert(state.title.startsWith('mseapca MCP'));
     if(process.env.EXPECTED_ENDPOINT)assert.equal(state.endpoint,process.env.EXPECTED_ENDPOINT);
+    if(process.env.EXPECTED_COMMAND)assert.equal(state.command,process.env.EXPECTED_COMMAND);
     assert(!state.endpoint.startsWith('Loading '),`${label}: endpoint configuration still loading`);
     assert.equal(state.overflow,false,`${label}: horizontal overflow`);
     assert.deepEqual(state.brokenAnchors,[]);
