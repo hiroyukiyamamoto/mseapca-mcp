@@ -5,9 +5,10 @@
   "upstream_path": "apps/mseapca-db-web/seed_data/default_pathways.json",
   "upstream_blob": "e51a166b71647a1bcdaf9c3ac0a3e9e393620c24",
   "input_records": 5046,
-  "retained_records": 4741,
+  "retained_records": 5324,
   "source_counts": {
     "ILDMDB": 60,
+    "ImmuneCellMetabolomics": 583,
     "MACdb": 17,
     "MetSigDis": 18,
     "PathBank": 870,
@@ -23,5 +24,20 @@
   },
   "removed_cross_references": 75117,
   "policy": "Exclude KEGG-origin sets, restricted metadata, all KEGG cross-references and primary compound IDs. No built-in mseapca pathway data or upstream fallback exports are used.",
-  "license_note": "Database sources retain their own terms. Non-KEGG does not imply unrestricted commercial use; see DATA_SOURCES.md."
+  "license_note": "Database sources retain their own terms. Non-KEGG does not imply unrestricted commercial use; see DATA_SOURCES.md.",
+  "catalog_sha256": "c8619487effb0ee06b19fd1fdef00691983526cddcbe5feb8820e471636d3963",
+  "immune_profiles": {
+    "source_path": "apps/immune-cell-metabolomics-web/catalog-data/immune-search/all-feature-changes.sqlite.gz",
+    "input_sha256": "43b6e255753cd5cd949c9bd3211e57c94cedd64e77661aa2f375b776e827080c",
+    "total_contrasts": 2554,
+    "max_fdr_bh": 0.05,
+    "min_fold_change": 1.5,
+    "sets": 583,
+    "audit": {
+      "ambiguous_names": 0,
+      "contrasts_with_signatures": 439
+    },
+    "web_catalog_sha256": "830b16aac0ffe708c1ea5eb6736231f9fc1dc5a8ff59e23ab913a595eb761f25",
+    "web_catalog_path": "apps/mseapca-db-web-no-kegg/seed_data/catalog.json.gz"
+  }
 }

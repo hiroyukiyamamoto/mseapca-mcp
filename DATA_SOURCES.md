@@ -18,3 +18,18 @@ The immutable normalized snapshot is `data/catalog.json.gz`; `data/manifest.json
 Source attribution and supplied descriptions remain in the snapshot. Study metadata is not a verified chemical or disease-direction assertion. Exclusion of KEGG does not license other sources. The project's MIT license covers wrapper/site code, not these data. License clearance for unrestricted commercial redistribution remains unresolved for the sources indicated above; do not advertise this snapshot as universally unrestricted. Source-provider terms and relevant original-study rights continue to apply.
 
 To rebuild with authorized source access, download the pinned JSON locally into `.reference/default_pathways.json`, then run `Rscript scripts/build-database.R`. Never use bundled mseapca `pathway` or `fasting_mseapca` pathways as a fallback. No live external identifier resolution or AI search is performed.
+
+## Immune cell differential profiles
+
+583 UP/DOWN sets from 439 contrasts are added from the filtered web snapshot:
+`AI/apps/mseapca-db-web-no-kegg/seed_data/catalog.json.gz`. Source statistics:
+`AI/apps/immune-cell-metabolomics-web/catalog-data/immune-search/all-feature-changes.sqlite.gz`.
+The manifest records both input hashes and selection thresholds (Welch status=ok,
+BH FDR <= 0.05, fold change >= 1.5). The source index contains 96 studies and 2,554
+contrasts from Metabolomics Workbench and MetaboLights; only eligible contrasts
+produce sets. Original study URLs and comparison/sample metadata are retained in
+descriptions. Existing 4,741 base sets are preserved, giving 5,324 sets/nine sources.
+Source feature names are used without inferred IDs or species. Independent source
+and original-study terms apply; this addition grants no new redistribution rights.
+Rebuilding the eight-source base removes immune sets until the Python importer
+is run again. This snapshot does not contain original quantitative matrices.

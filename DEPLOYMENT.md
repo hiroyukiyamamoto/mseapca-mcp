@@ -4,7 +4,7 @@
 
 - Site: https://hiroyukiyamamoto.github.io/mseapca-mcp/ — published through GitHub Actions.
 - Project / region: `stable-century-479407-m7` / `asia-northeast1`.
-- Service / revision: `mseapca-mcp` / `mseapca-mcp-00001-td9`, ready, 100% traffic.
+- Service / revision: `mseapca-mcp` / `mseapca-mcp-00002-gs6`, ready, 100% traffic.
 - Endpoint: https://mseapca-mcp-121643671058.asia-northeast1.run.app/mcp .
 - Access: **public, no registration or API key required**. After explicit final approval, allUsers received roles/run.invoker on mseapca-mcp only. Invoker IAM checking remains enabled; anonymous initialize returns 200.
 - Runtime: existing role-free `loadings-mcp-runtime@stable-century-479407-m7.iam.gserviceaccount.com`; permissions were not changed.
@@ -98,3 +98,26 @@ gcloud run services remove-iam-policy-binding mseapca-mcp \
 ```
 
 Verify anonymous403 afterward. Do not lift the shared spend cap to keep the service online.
+
+## Immune UP/DOWN catalog update ? 2026-11-01 (JST)
+
+- Catalog: 5,324 sets across nine sources, including 583 immune direction-specific
+  sets from 439 contrasts. Existing 4,741 records are unchanged and immune records
+  exactly match the filtered Metabolite Set Database snapshot.
+- Build: `e6eebe6e-9c0a-445c-8bdb-2dbe4ed93e6e`, SUCCESS.
+- Revision: `mseapca-mcp-00002-gs6`, ready, 100% traffic.
+- Image: `asia-northeast1-docker.pkg.dev/stable-century-479407-m7/cloud-run-source-deploy/mseapca-mcp@sha256:e8477c28c1367b33b961c20f04a9b0a56447661937f2c528665d314a84ccc096`.
+- The update image layers only `data/` over the previous immutable production
+  image (`sha256:781fa6a6e2ad0a3a81285c2b5ffa228f1000f4a21add71e5d0b3800c02332ec6`).
+  R code, dependencies and gateway are unchanged. Standard Dockerfile builds
+  also include the updated snapshot.
+- Verified the existing configured JPY1,000 shared Cloud Run cap before building.
+  Deployment changes only the image; existing access/resources/IAM are retained.
+- Anonymous `catalog_info`, source-filtered `search_sets`, `get_sets` and separate
+  UP/DOWN `analyze_ora` calls passed on the public MCP. LPS contrast UP matches
+  3/3 increased markers; DOWN matches 2/2 decreased markers, with zero cross
+  overlaps. Test background is the 39-member union solely for functional checks,
+  not a real experimental measured background or a claim of enrichment.
+- Reproduce: `python scripts/check-immune-http.py`; report in ignored
+  `test-results/immune-http.json`. Local database audit/ORA and site checks passed.
+- Existing nine MCP tools remain unchanged; no combined CMap search was added.

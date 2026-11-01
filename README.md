@@ -12,7 +12,7 @@ Hosted MCP: https://mseapca-mcp-121643671058.asia-northeast1.run.app/mcp — **f
 Nine tools: `catalog_info`, `search_sets`, `get_sets`, `lookup_metabolites`, `demo_data`, `analyze_ora`, `analyze_range`, `analyze_msea`, `analyze_ssea`.
 
 - Five official ORA background modes, four uncertainty-range modes, quantitative MSEA and presence-list SSEA.
-- A filtered snapshot of the requested `AI/apps/mseapca-db-web` database: **4,741 sets, eight sources**.
+- A filtered snapshot of the requested `AI/apps/mseapca-db-web` database: **5,324 sets, nine sources**.
 - KEGG-origin sets, cross-reference fields and compound identifiers are excluded. Built-in mseapca pathway datasets are never loaded. See [DATA_SOURCES.md](DATA_SOURCES.md).
 - The default demo is the full real `loadings::fasting` metabolome (10 samples, 282 metabolites), with explicitly exploratory cross-species ORA. No invented experimental measurements.
 - Website uses the same minimal sage/white design as loadings MCP.
@@ -78,3 +78,33 @@ Deployment is private by default, with min instances 0, max 1, concurrency 1, re
 Wrapper and website: MIT. mseapca/loadings: LGPL-3. Data is **not MIT-licensed**; source terms apply, including PathBank commercial restrictions and unresolved terms for some sources. Read [DATA_SOURCES.md](DATA_SOURCES.md) before redistribution or commercial use.
 
 Developer: Hiroyuki Yamamoto.
+
+## Immune cell UP/DOWN profiles
+
+The catalog includes 583 direction-specific sets from 439 immune-cell treatment
+contrasts, imported from the Metabolite Set Database's filtered snapshot.
+Selection: valid Welch test, BH FDR <= 0.05, fold change >= 1.5 (treatment/control).
+Use `search_sets(source="ImmuneCellMetabolomics")`, then `get_sets` with
+`identifier="name"`. IDs ending `_UP` and `_DOWN` share the same contrast prefix.
+Names are preserved; HMDB/InChIKey and organism assignments are not inferred.
+
+For example, retrieve `IMMUNE_ST001283_AN002127_C180_UP` and
+`IMMUNE_ST001283_AN002127_C180_DOWN` (LPS 24 hours versus control). Run ORA once
+with your increased metabolites and once with your decreased metabolites,
+selecting both sets and supplying your actual measured background. UP-to-UP and
+DOWN-to-DOWN support concordance; the other two combinations support reversal.
+Do not merge UP/DOWN query lists if you need direction. There is no combined
+CMap ranking tool; the existing nine tools are unchanged. ORA p/q values depend
+on the selected sets/background and are distinct from source-study Welch FDRs.
+A single call selects 2-200 sets, not all 583 at once; correction is within each
+call, so separate batches do not provide a catalog-wide adjusted q-value.
+
+Offline rebuild after the base `scripts/build-database.R` step (Python 3):
+
+```sh
+python scripts/import-immune-profiles.py ../AI/apps/mseapca-db-web-no-kegg/seed_data/catalog.json.gz
+```
+
+The importer validates the source hash and exclusion policy, preserves existing
+sources and replaces its own records on repeat runs. Thresholds and source hashes
+are recorded in `data/manifest.json`.

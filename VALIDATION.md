@@ -39,3 +39,14 @@ Remaining unverified after private deployment: actual ChatGPT/Claude sessions, w
 - The previous follow-up Linux job stalled while obtaining R; the standalone job now uses the same pinned official rocker/r-ver:4.5.2 image as production. Analysis code and package versions are unchanged. The previous Docker job passed; the fresh follow-up Linux standalone job passed after this environment change.
 - PASS: public Pages at desktop1440x1000 and mobile390x844: actual endpoint and exact anonymous Claude Code HTTP connection command, image loading, internal anchors and no horizontal overflow.
 - PASS: final full Linux standalone and Docker pipeline: https://github.com/hiroyukiyamamoto/mseapca-mcp/actions/runs/38934393491 . Both jobs completed successfully, including official numerical comparisons, exclusion audits, JPY1,000 cap validation, worker/size/work bounds, all MCP tools, example/site checks and container gateway limits. This supersedes the earlier stalled/cancelled follow-up Linux job.
+
+## 2026-11-01 immune catalog update
+
+Local `tests/database.R` passed exclusion audit, timeout recovery, 583-set source
+search, paired LPS set retrieval and separate direction-specific ORA with exact
+3/0 and 0/2 overlaps. Existing 4,741 records are structurally unchanged; 583
+incoming records exactly match the filtered web snapshot. `node tests/site.mjs`
+passed. Anonymous public MCP checks passed with 5,324 total sets/nine sources:
+`catalog_info`, `search_sets`, `get_sets`, two `analyze_ora` calls. See DEPLOYMENT.md
+for revision/image and the functional-test background limitation. Local R checks
+used R 4.4.0; public checks exercised the unchanged production R image.

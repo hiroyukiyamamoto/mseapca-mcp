@@ -4,7 +4,7 @@ All nine tools return JSON text in an MCP text content block. Decode the text on
 
 ## Database tools
 
-- `catalog_info()`: snapshot provenance, 4,741 sets and eight source counts.
+- `catalog_info()`: snapshot provenance, 5,324 sets and nine source counts.
 - `search_sets(query="",source="",organism="",limit=25,offset=0)`: literal case-insensitive text search; optional exact source, organism substring; limit 1-100, offset 0-10000. Returns total, returned, offset, truncated and metadata.
 - `get_sets(set_ids,identifier="name",max_members=100)`: 1-50 unique IDs, member limit 1-500 per set. Returns source metadata and truncation. Returned previews are not used internally to truncate analyses.
 - `lookup_metabolites(query,exact=TRUE,limit=25)`: literal lookup of retained names/identifiers. No inferred synonyms. Up to 100 results.
@@ -24,3 +24,9 @@ All nine tools return JSON text in an MCP text content block. Decode the text on
 For the first three analyses, max_results is 1-200; ordering and truncation happen after statistical correction. Positive lambda is bounded to 1,000. Nonfinite values are represented by `not_finite`, counted explicitly, never rounded to zero. Conditions identify actual method and statistical assumptions. Warnings from upstream are retained. Tool text serialization uses full precision.
 
 Production gateway: 2 MiB HTTP body, 60 requests/minute shared per instance, burst 10; workers 20 seconds, gateway timeout 25 seconds, Cloud Run 30 seconds. These limits are resource safeguards, not a strict bill cap. Direct R startup omits gateway limits and is for trusted local use.
+
+Immune profiles: filter `search_sets` by `source="ImmuneCellMetabolomics"`.
+Use `identifier="name"` and paired `_UP`/`_DOWN` IDs. Run ORA separately for
+increased and decreased query lists with the actual measured background.
+The 2-200 sets/call limit remains; q-values are per call, not across batches.
+See the repository README for the reproducible LPS contrast example.
